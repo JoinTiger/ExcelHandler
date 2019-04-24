@@ -104,11 +104,11 @@ public class ExcelController {
     }
 
     @PostMapping(value = "/excel/getCh")
-    public String getCh(Model model) throws JsonProcessingException {
+    @ResponseBody
+    public String getCh() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(produceInfoRepository.findAll());
-        model.addAttribute("json1", json);
-        return "export";
+        return json;
     }
 
 //
