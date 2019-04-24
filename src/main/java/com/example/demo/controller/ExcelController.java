@@ -4,19 +4,20 @@ package com.example.demo.controller;
 import com.example.demo.bean.DeviceInfo;
 import com.example.demo.bean.JsonData;
 import com.example.demo.bean.ProduceInfo;
-import com.example.demo.bean.User;
+
+import com.example.demo.redis.SequenceUtils;
 import com.example.demo.repository.ProduceInfoRepository;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.util.ExcelUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,10 +32,10 @@ import java.util.Random;
 @Controller
 public class ExcelController {
     @Autowired
-    private UserRepository userRepository;
+    private ProduceInfoRepository produceInfoRepository;
 
     @Autowired
-    private ProduceInfoRepository produceInfoRepository;
+    private SequenceUtils sequenceUtils;
 
     @RequestMapping("/poi")
     public String toIndex1(){
@@ -49,6 +50,11 @@ public class ExcelController {
         return "parse";
     }
 
+    @RequestMapping("/test")
+    public String toIndex11(){
+        return "test";
+    }
+
     @PostMapping("/excel/up")
     @ResponseBody
     public String fileUp(@RequestBody String json) throws IOException {
@@ -56,35 +62,53 @@ public class ExcelController {
         ObjectMapper mapper = new ObjectMapper();
         List<JsonData> list = mapper.readValue(json, new TypeReference<List<JsonData>>(){});
         ProduceInfo produceInfo = new ProduceInfo();
+        list.add(new JsonData());
         for(JsonData jsonData: list) {
+            if(jsonData.getMacSn() != null && produceInfo.getBatchId() == null) {
+                DeviceInfo deviceInfo = new DeviceInfo();
+                deviceInfo.setMotorNum(jsonData.getMotorNum());
+                deviceInfo.setSvNum(jsonData.getSvNum());
+                produceInfo.addDevice(deviceInfo);
+                produceInfo.setBatchId(sequenceUtils.getAutoFlowCode());
 
-            if(jsonData.getMacSn() != null && produceInfo == null) {
+                produceInfo.setContractNum(jsonData.getContractNum());
+                produceInfo.setIpcNum(jsonData.getIpcNum());
+                produceInfo.setMacSn(jsonData.getMacSn());
+                produceInfo.setNcNum(jsonData.getNcNum());
+                deviceInfo.setProduceInfo(produceInfo);
+            } else if (jsonData.getMacSn() != null && produceInfo.getBatchId() != null){
+                produceInfoRepository.save(produceInfo);
                 produceInfo = new ProduceInfo();
                 DeviceInfo deviceInfo = new DeviceInfo();
                 deviceInfo.setMotorNum(jsonData.getMotorNum());
                 deviceInfo.setSvNum(jsonData.getSvNum());
                 produceInfo.addDevice(deviceInfo);
-                produceInfo.setBatchId(new SimpleDateFormat("yyyy-MM-dd").format(new Date())+new Random(1000));
+                produceInfo.setBatchId(sequenceUtils.getAutoFlowCode());
                 produceInfo.setContractNum(jsonData.getContractNum());
                 produceInfo.setIpcNum(jsonData.getIpcNum());
                 produceInfo.setMacSn(jsonData.getMacSn());
                 produceInfo.setNcNum(jsonData.getNcNum());
+                deviceInfo.setProduceInfo(produceInfo);
+            } else if(jsonData.getSvNum() == null && produceInfo.getBatchId() != null){
+                produceInfoRepository.save(produceInfo);
             } else {
                 DeviceInfo deviceInfo = new DeviceInfo();
                 deviceInfo.setMotorNum(jsonData.getMotorNum());
                 deviceInfo.setSvNum(jsonData.getSvNum());
                 produceInfo.addDevice(deviceInfo);
+                deviceInfo.setProduceInfo(produceInfo);
             }
 
-            produceInfoRepository.save(produceInfo);
         }
         return "parse";
     }
 
-    @GetMapping(value = "/excel/getCh")
-    @ResponseBody
-    public List<ProduceInfo> getCh(){
-        return produceInfoRepository.findAll();
+    @PostMapping(value = "/excel/getCh")
+    public String getCh(Model model) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(produceInfoRepository.findAll());
+        model.addAttribute("json1", json);
+        return "export";
     }
 
 //

@@ -2,6 +2,7 @@ package com.example.demo.bean;
 
 
 import com.example.demo.annotation.ExcelAttribute;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 public class DeviceInfo implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @JsonProperty("驱动编号")
     @ExcelAttribute(name="驱动编号",column="F")
@@ -57,7 +58,7 @@ public class DeviceInfo implements Serializable {
     public ProduceInfo getProduceInfo() {
         return produceInfo;
     }
-
+    @JsonBackReference
     public void setProduceInfo(ProduceInfo produceInfo) {
         this.produceInfo = produceInfo;
     }

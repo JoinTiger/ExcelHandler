@@ -13,7 +13,7 @@ import java.util.List;
 public class ProduceInfo implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @JsonProperty("批次号")
     @ExcelAttribute(name="批次号",column="A")
