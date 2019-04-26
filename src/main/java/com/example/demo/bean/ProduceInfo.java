@@ -1,7 +1,5 @@
 package com.example.demo.bean;
 
-import com.example.demo.annotation.ExcelAttribute;
-import com.example.demo.annotation.ExcelElement;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -16,29 +14,19 @@ public class ProduceInfo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @JsonProperty("批次号")
-    @ExcelAttribute(name="批次号",column="A")
     private String batchId;
     @JsonProperty("系统Sn号")
-    @ExcelAttribute(name="系统Sn号",column="B")
     private String macSn;
     @JsonProperty("数控编号")
-    @ExcelAttribute(name="数控编号",column="C")
     private String ncNum;
     @JsonProperty("ipc编号")
-    @ExcelAttribute(name="ipc编号",column="D")
     private String ipcNum;
     @JsonProperty("合同编号")
-    @ExcelAttribute(name="合同编号",column="E")
     private String contractNum;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="produceInfo" )
-    @ExcelElement
+    @JsonProperty("子表")
     private List<DeviceInfo> deviceInfos = new ArrayList<>();
-
-    public void addDevice(DeviceInfo deviceInfo) {
-        deviceInfos.add(deviceInfo);
-    }
-
 
     public ProduceInfo() {
     }

@@ -11,7 +11,7 @@
 <body>
 
 <form id="documentForm"  ><a th:text="${json1}"></a>
-<button onclick="login()" type="button"></button>
+    <button onclick="login()" type="button"></button>
 </form>
 
 <a href="" download="这里是下载的文件名.xlsx" id="hf"></a>
@@ -23,17 +23,46 @@
             //几个参数需要注意一下
             type: "POST",//方法类型
             dataType: "json",//预期服务器返回的数据类型
-            url: "/excel/getCh" ,//url
+            url: "/excel/export" ,//url
             data: $("documentForm").serialize(),
             success: function (result) {
                 console.log(result);//打印服务端返回的数据(调试用)
-                alert(JSON.stringify(result));
-                //downloadExl(JSON.stringify(result))
+                downloadExl(jsonHandle(result))
             },
             error : function() {
                 alert("异常！");
             }
         });
+    }
+
+    function jsonHandle(result) {
+        var retData = [];
+        var jsono = result;
+        var data = {"批次号": "", "系统Sn号": "", "数控编号": "", "ipc编号": "", "合同编号": "", "驱动编号": "", "电机编号": ""};
+        for(i in jsono) {
+            count = 0;
+            data.批次号 = jsono[i].批次号;
+            data.系统Sn号 = jsono[i].系统Sn号;
+            data.数控编号 = jsono[i].数控编号;
+            data.ipc编号 = jsono[i].ipc编号;
+            data.合同编号 = jsono[i].合同编号;
+            for(j in jsono[i].deviceInfo) {
+                if(count != 0) {
+                    data.批次号 = "";
+                    data.系统Sn号 = "";
+                    data.数控编号 = "";
+                    data.ipc编号 = "";
+                    data.合同编号 = "";
+                }
+                count++;
+                data.驱动编号 = jsono[i].deviceInfo[j].驱动编号;
+                data.电机编号 = jsono[i].deviceInfo[j].电机编号;
+                var newData = $.extend(true,{}, data);
+                retData.push(newData);
+            }
+
+        }
+        return retData
     }
 
     var tmpDown; //导出的二进制对象
@@ -94,9 +123,6 @@
         }
         return s
     }
-
-
-
 </script>
 </body>
 

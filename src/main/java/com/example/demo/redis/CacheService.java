@@ -25,7 +25,7 @@ public class CacheService {
 	        if ((null == counter || counter.longValue() == 1)) {// 初始设置过期时间
 	            
 	        	int remainSeconds = getRemainSecondsOneDay(new Date());
-	            entityIdCounter.expire(remainSeconds, TimeUnit.MILLISECONDS);// 单位天
+	            entityIdCounter.expire(remainSeconds, TimeUnit.SECONDS);// 单位
 	        }
 	        return counter;
 		}

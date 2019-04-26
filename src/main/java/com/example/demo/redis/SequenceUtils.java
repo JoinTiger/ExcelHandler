@@ -13,7 +13,7 @@ public class SequenceUtils {
 	@Autowired
 	private CacheService cacheService;
 	
-    private static final int DEFAULT_LENGTH = 5;
+    private static final int DEFAULT_LENGTH = 9;
 
     public static String getSequence(long seq) {
         String str = String.valueOf(seq);
@@ -29,15 +29,13 @@ public class SequenceUtils {
         sb.append(str);
         return sb.toString();
     }
-    
-    
-    
-    
+
     public String getAutoFlowCode() {
         String currentDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        Long num = cacheService.getIncrementNum("demo_get_the_new_" + "test3_"+currentDate);
+        String currentDate2 = new SimpleDateFormat("yyyyMMddHHmmSS").format(new Date());
+        Long num = cacheService.getIncrementNum(""+currentDate);
         String flowCode = SequenceUtils.getSequence(num);
-        return currentDate + flowCode;
+        return currentDate2 + flowCode;
     }
     
     
