@@ -13,23 +13,31 @@ public class DeviceInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @JsonProperty("驱动编号")
     private String svNum;
+
     @JsonProperty("电机编号")
     private String motorNum;
 
-    @ManyToOne
-    @JoinColumn(name = "batchId", referencedColumnName = "batchId")
-    private ProduceInfo produceInfo;
-    public DeviceInfo(){}
+    @JsonProperty("系统Sn号")
+    private String macSn;
 
-    public String getMotorNum() {
-        return motorNum;
+    @JsonProperty("批次号")
+    private String batchId;
+
+
+    public DeviceInfo() {
     }
 
-    public void setMotorNum(String motorNum) {
+
+    public DeviceInfo(String svNum, String motorNum, String macSn, String batchId) {
+        this.svNum = svNum;
         this.motorNum = motorNum;
+        this.macSn = macSn;
+        this.batchId = batchId;
     }
+
 
     public long getId() {
         return id;
@@ -47,11 +55,27 @@ public class DeviceInfo implements Serializable {
         this.svNum = svNum;
     }
 
-    public ProduceInfo getProduceInfo() {
-        return produceInfo;
+    public String getMotorNum() {
+        return motorNum;
     }
-    @JsonBackReference
-    public void setProduceInfo(ProduceInfo produceInfo) {
-        this.produceInfo = produceInfo;
+
+    public void setMotorNum(String motorNum) {
+        this.motorNum = motorNum;
+    }
+
+    public String getMacSn() {
+        return macSn;
+    }
+
+    public void setMacSn(String macSn) {
+        this.macSn = macSn;
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
     }
 }

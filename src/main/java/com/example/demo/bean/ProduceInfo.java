@@ -13,10 +13,7 @@ public class ProduceInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @JsonProperty("批次号")
-    private String batchId;
-    @JsonProperty("系统Sn号")
-    private String macSn;
+
     @JsonProperty("数控编号")
     private String ncNum;
     @JsonProperty("ipc编号")
@@ -24,34 +21,28 @@ public class ProduceInfo implements Serializable {
     @JsonProperty("合同编号")
     private String contractNum;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="produceInfo" )
+    @JsonProperty("系统Sn号")
+    private String macSn;
+    @JsonProperty("批次号")
+    private String batchId;
+
     @JsonProperty("子表")
+    @Transient
     private List<DeviceInfo> deviceInfos = new ArrayList<>();
 
     public ProduceInfo() {
     }
 
-    public ProduceInfo(long id, String batchId, String macSn, String ncNum, String ipcNum, String contractNum) {
-        this.id = id;
-        this.batchId = batchId;
-        this.macSn = macSn;
+
+    public ProduceInfo(String ncNum, String ipcNum, String contractNum, String macSn, String batchId, List<DeviceInfo> deviceInfos) {
         this.ncNum = ncNum;
         this.ipcNum = ipcNum;
         this.contractNum = contractNum;
+        this.macSn = macSn;
+        this.batchId = batchId;
+        this.deviceInfos = deviceInfos;
     }
 
-    @Override
-    public String toString() {
-        return "ProduceInfo{" +
-                "id=" + id +
-                ", batchId='" + batchId + '\'' +
-                ", macSn='" + macSn + '\'' +
-                ", ncNum='" + ncNum + '\'' +
-                ", ipcNum='" + ipcNum + '\'' +
-                ", contractNum='" + contractNum + '\'' +
-                ", deviceInfo=" + deviceInfos +
-                '}';
-    }
 
     public long getId() {
         return id;
@@ -59,22 +50,6 @@ public class ProduceInfo implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getBatchId() {
-        return batchId;
-    }
-
-    public void setBatchId(String batchId) {
-        this.batchId = batchId;
-    }
-
-    public String getMacSn() {
-        return macSn;
-    }
-
-    public void setMacSn(String macSn) {
-        this.macSn = macSn;
     }
 
     public String getNcNum() {
@@ -101,11 +76,27 @@ public class ProduceInfo implements Serializable {
         this.contractNum = contractNum;
     }
 
-    public List<DeviceInfo> getDeviceInfo() {
+    public String getMacSn() {
+        return macSn;
+    }
+
+    public void setMacSn(String macSn) {
+        this.macSn = macSn;
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
+    public List<DeviceInfo> getDeviceInfos() {
         return deviceInfos;
     }
 
-    public void setDeviceInfo(List<DeviceInfo> deviceInfo) {
-        this.deviceInfos = deviceInfo;
+    public void setDeviceInfos(List<DeviceInfo> deviceInfos) {
+        this.deviceInfos = deviceInfos;
     }
 }
