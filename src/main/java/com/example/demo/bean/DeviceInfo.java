@@ -10,6 +10,8 @@ import java.io.Serializable;
 @Entity
 public class DeviceInfo implements Serializable {
 
+    private static final long serialVersionUID = 1385237083886390516L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

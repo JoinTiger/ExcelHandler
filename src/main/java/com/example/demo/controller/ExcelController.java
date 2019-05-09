@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.bean.DeviceInfo;
-import com.example.demo.bean.ProduceInfo;
+import com.example.demo.bean.ProductInfo;
 import com.example.demo.redis.SequenceUtils;
-import com.example.demo.repository.ProduceInfoRepository;
+import com.example.demo.repository.ProductInfoRepository;
+import com.example.demo.service.DeviceInfoService;
+import com.example.demo.service.ProductInfoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,11 +18,17 @@ import java.util.List;
 
 @Controller
 public class ExcelController {
-    @Autowired
-    private ProduceInfoRepository produceInfoRepository;
 
     @Autowired
-    private SequenceUtils sequenceUtils;
+    private ProductInfoRepository productInfoRepository;
+
+    @Autowired
+    private ProductInfoService productInfoService;
+
+    @Autowired
+    private DeviceInfoService deviceInfoService;
+
+
 
     @RequestMapping("/export")
     public String exportPage(){
@@ -34,38 +42,44 @@ public class ExcelController {
 
     @PostMapping("/excel/import")
     @ResponseBody
-    public String excelExport(@RequestBody String json) throws IOException {
-        System.out.println(json);
+    public String excelImport(@RequestBody String json) throws IOException {
+        //System.out.println(json);
         ObjectMapper mapper = new ObjectMapper();
-        List<ProduceInfo> list = mapper.readValue(json, new TypeReference<List<ProduceInfo>>(){});
+        List<ProductInfo> productInfos = mapper.readValue(json, new TypeReference<List<ProductInfo>>(){});
 
-        for(ProduceInfo pro : list) {
-            System.out.print("product-macSn:" + pro.getMacSn() + "          ");
-            System.out.print("product-batchId:" + pro.getBatchId());
-            System.out.println();
+        productInfoService.saveProductAndDevice(productInfos);
 
-            for(DeviceInfo deviceInfo1 : pro.getDeviceInfos()) {
-                System.out.print("         sub-macSn:" + deviceInfo1.getMacSn());
-                System.out.print("         sub-batchId:" + deviceInfo1.getBatchId());
-                System.out.print("         sub-motorNUm:" + deviceInfo1.getMotorNum());
-            }
-
-            System.out.println();
-
-        }
-
-        return "parse";
+        return "success";
     }
 
+
     @GetMapping(value = "/excel/export")
+    @ResponseBody
+    public String excelExport() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        List<ProductInfo> productInfos = productInfoService.getAllProduct();
+
+        String json = mapper.writeValueAsString(productInfos);
+
+        return json;
+    }
+
+
+
+
+
+
+
+    @GetMapping(value = "/getJson")
     @ResponseBody
     public String getProductInfo() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
-        List<ProduceInfo> pros = new ArrayList<>();
+        List<ProductInfo> pros = new ArrayList<>();
 
-        ProduceInfo produceInfo1 = new ProduceInfo();
-        ProduceInfo produceInfo2 = new ProduceInfo();
+        ProductInfo productInfo1 = new ProductInfo();
+        ProductInfo productInfo2 = new ProductInfo();
 
         DeviceInfo deviceInfo1 = new DeviceInfo();
         DeviceInfo deviceInfo2 = new DeviceInfo();
@@ -106,20 +120,20 @@ public class ExcelController {
 
 
 
-        produceInfo1.setBatchId("aa11111");
-        produceInfo1.setMacSn("aa11111");
-        produceInfo1.getDeviceInfos().add(deviceInfo1);
-        produceInfo1.getDeviceInfos().add(deviceInfo2);
-        produceInfo1.getDeviceInfos().add(deviceInfo3);
+        productInfo1.setBatchId("aa11111");
+        productInfo1.setMacSn("aa11111");
+        productInfo1.getDeviceInfos().add(deviceInfo1);
+        productInfo1.getDeviceInfos().add(deviceInfo2);
+        productInfo1.getDeviceInfos().add(deviceInfo3);
 
 
-        produceInfo2.setBatchId("bb11111");
-        produceInfo2.setMacSn("bb11111");
-        produceInfo2.getDeviceInfos().add(deviceInfo4);
-        produceInfo2.getDeviceInfos().add(deviceInfo5);
+        productInfo2.setBatchId("bb11111");
+        productInfo2.setMacSn("bb11111");
+        productInfo2.getDeviceInfos().add(deviceInfo4);
+        productInfo2.getDeviceInfos().add(deviceInfo5);
 
-        pros.add(produceInfo1);
-        pros.add(produceInfo2);
+        pros.add(productInfo1);
+        pros.add(productInfo2);
 
         String json = mapper.writeValueAsString(pros);
         return json;

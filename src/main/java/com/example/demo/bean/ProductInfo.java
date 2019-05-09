@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class ProduceInfo implements Serializable {
+public class ProductInfo implements Serializable {
+
+    private static final long serialVersionUID = -4221229025250523169L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +32,11 @@ public class ProduceInfo implements Serializable {
     @Transient
     private List<DeviceInfo> deviceInfos = new ArrayList<>();
 
-    public ProduceInfo() {
+    public ProductInfo() {
     }
 
 
-    public ProduceInfo(String ncNum, String ipcNum, String contractNum, String macSn, String batchId, List<DeviceInfo> deviceInfos) {
+    public ProductInfo(String ncNum, String ipcNum, String contractNum, String macSn, String batchId, List<DeviceInfo> deviceInfos) {
         this.ncNum = ncNum;
         this.ipcNum = ipcNum;
         this.contractNum = contractNum;
@@ -99,4 +101,7 @@ public class ProduceInfo implements Serializable {
     public void setDeviceInfos(List<DeviceInfo> deviceInfos) {
         this.deviceInfos = deviceInfos;
     }
+
+
+
 }
