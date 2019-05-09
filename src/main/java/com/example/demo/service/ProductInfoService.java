@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -65,11 +66,18 @@ public class ProductInfoService {
         for(ProductSummary productSummary : productSummaries) {
             String batchId = productSummary.getBatchId();
             String macSn = productSummary.getMacSn();
+
+
+
             ProductInfo productInfo = productInfoRepository.findFirstByBatchIdAndMacSn(batchId, macSn);
 
             List<DeviceInfo> deviceInfos = deviceInfoRepository.findByBatchIdAndMacSn(batchId, macSn);
 
             productInfo.getDeviceInfos().addAll(deviceInfos);
+
+            Date date = new Date();
+            productInfo.setTime(date);
+            System.out.println("date:" + productInfo.getTime());
             ret.add(productInfo);
         }
 

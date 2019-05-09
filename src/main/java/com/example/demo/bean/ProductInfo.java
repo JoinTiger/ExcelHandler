@@ -1,10 +1,12 @@
 package com.example.demo.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,6 +30,9 @@ public class ProductInfo implements Serializable {
     @JsonProperty("批次号")
     private String batchId;
 
+    @JsonIgnore
+    private Date time;
+
     @JsonProperty("子表")
     @Transient
     private List<DeviceInfo> deviceInfos = new ArrayList<>();
@@ -36,15 +41,15 @@ public class ProductInfo implements Serializable {
     }
 
 
-    public ProductInfo(String ncNum, String ipcNum, String contractNum, String macSn, String batchId, List<DeviceInfo> deviceInfos) {
+    public ProductInfo(String ncNum, String ipcNum, String contractNum, String macSn, String batchId, Date time, List<DeviceInfo> deviceInfos) {
         this.ncNum = ncNum;
         this.ipcNum = ipcNum;
         this.contractNum = contractNum;
         this.macSn = macSn;
         this.batchId = batchId;
+        this.time = time;
         this.deviceInfos = deviceInfos;
     }
-
 
     public long getId() {
         return id;
@@ -102,6 +107,11 @@ public class ProductInfo implements Serializable {
         this.deviceInfos = deviceInfos;
     }
 
+    public Date getTime() {
+        return time;
+    }
 
-
+    public void setTime(Date time) {
+        this.time = time;
+    }
 }

@@ -40,7 +40,6 @@ public class DeviceInfo implements Serializable {
         this.batchId = batchId;
     }
 
-
     public long getId() {
         return id;
     }
