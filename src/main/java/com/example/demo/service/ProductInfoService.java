@@ -44,8 +44,12 @@ public class ProductInfoService {
     public void saveProductAndDevice(List<ProductInfo> list) {
         for(ProductInfo pro : list) {
 
+
             String autoFlowCode = sequenceUtils.getAutoFlowCode();
+            Date date = new Date();
+
             pro.setBatchId(autoFlowCode);
+            pro.setTime(date);
 
             productInfoRepository.save(pro);
 

@@ -59,4 +59,27 @@ public class DemoApplicationTests {
 		List<ProductInfo> allProducts = productInfoService.getAllProduct();
 	}
 
+	@Test
+	public void test04() {
+		List<ProductSummary> pros = deviceInfoRepository.getMacSnAndBatchId("bdafa", "adafa");
+
+		for (ProductSummary pro : pros) {
+			System.out.println("macSn:" + pro.getMacSn() + "  batchId;" + pro.getBatchId());
+		}
+
+	}
+
+	@Test
+	public void test05() {
+		//"2017-1-1 00:00:00"
+		List<ProductSummary> macSnAndBatchId = productInfoRepository.getMacSnAndBatchId("", "",
+				"", "", "",
+				"2019-05-10 07:19:37", "2029-05-10 07:19:37");
+
+		for (ProductSummary productSummary : macSnAndBatchId) {
+			System.out.println("batchId:" + productSummary.getBatchId() + "  macSn:" + productSummary.getMacSn());
+		}
+
+	}
+
 }

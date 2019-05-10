@@ -35,7 +35,7 @@ public class SequenceUtils {
         String currentDate2 = new SimpleDateFormat("yyyyMMddHHmmSS").format(new Date());
         Long num = cacheService.getIncrementNum(""+currentDate);
         String flowCode = SequenceUtils.getSequence(num);
-        return currentDate2 + flowCode;
+        return currentDate2 + "**" + flowCode;
     }
     
     
