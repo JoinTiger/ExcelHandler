@@ -71,8 +71,6 @@ public class ProductInfoService {
             String batchId = productSummary.getBatchId();
             String macSn = productSummary.getMacSn();
 
-
-
             ProductInfo productInfo = productInfoRepository.findFirstByBatchIdAndMacSn(batchId, macSn);
 
             List<DeviceInfo> deviceInfos = deviceInfoRepository.findByBatchIdAndMacSn(batchId, macSn);
@@ -81,11 +79,41 @@ public class ProductInfoService {
 
             Date date = new Date();
             productInfo.setTime(date);
-            System.out.println("date:" + productInfo.getTime());
             ret.add(productInfo);
         }
 
         return ret;
     }
+
+    @Transactional
+    public List<ProductInfo> getSelectProduct(String ncNum, String ipcNum,
+                                              String contractNum, String macSn, String batchId,
+                                              String startTime, String endTime,
+                                              String svNum, String motorNum) {
+        List<ProductInfo> ret = new ArrayList<>();
+
+        List<ProductSummary> productSummaries = productInfoRepository.getMacSnAndBatchId(ncNum, ipcNum, contractNum, macSn, batchId, startTime, endTime);
+        List<ProductSummary> devSummaries = deviceInfoRepository.getMacSnAndBatchId(svNum, motorNum);
+
+
+        productSummaries.retainAll(devSummaries);
+
+        for(ProductSummary productSummary : productSummaries) {
+            String sBatchId = productSummary.getBatchId();
+            String sMacSn = productSummary.getMacSn();
+
+            ProductInfo productInfo = productInfoRepository.findFirstByBatchIdAndMacSn(sBatchId, sMacSn);
+
+            List<DeviceInfo> deviceInfos = deviceInfoRepository.findByBatchIdAndMacSn(sBatchId, sMacSn);
+
+            productInfo.getDeviceInfos().addAll(deviceInfos);
+
+            ret.add(productInfo);
+        }
+
+        return ret;
+    }
+
+
 
 }

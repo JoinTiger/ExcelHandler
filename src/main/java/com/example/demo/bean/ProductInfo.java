@@ -37,6 +37,13 @@ public class ProductInfo implements Serializable {
     @Transient
     private List<DeviceInfo> deviceInfos = new ArrayList<>();
 
+
+
+
+
+
+
+
     public ProductInfo() {
     }
 
