@@ -86,7 +86,10 @@ public class DemoApplicationTests {
 	//待测试
 	@Test
 	public void test06() {
-
+		productInfoRepository.getMacSnAndBatchId("", "",
+													"", "", "",
+														"", "",
+															"bdafa", "b32");
 	}
 
 }
