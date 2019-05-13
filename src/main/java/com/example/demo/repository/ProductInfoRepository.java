@@ -49,11 +49,11 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long> 
             + " if(ISNULL(?6) || length(trim(?6)) < 1, 1 = 1, time >= ?6) and"
             + " if(ISNULL(?7) || length(trim(?7)) < 1, 1 = 1, time <= ?7) ) t"
             + " join"
-
+            
             + " ("
             + " select distinct batch_id as batchId, mac_sn as macSn from device_info" + " where"
             + " if(ISNULL(?8) || length(trim(?8)) < 1, 1 = 1, sv_num = ?8) and"
-            + " if(ISNULL(?9) || length(trim(?9)) < 1, 1 = 1, motor_num = ?9"
+            + " if(ISNULL(?9) || length(trim(?9)) < 1, 1 = 1, motor_num = ?9)"
             + ") k "
             + " on"
             + "(t.batchId = k.batchId and t.macSn = k.macSn)"
